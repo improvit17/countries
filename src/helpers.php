@@ -37,15 +37,39 @@ if (! function_exists('countries')) {
 
 if (! function_exists('currencies')) {
     /**
-     * Get all countries short-listed.
+     * Get all currencies short-listed.
      *
      * @param bool $longlist
-     * @param bool $hydrate
      *
      * @return array
      */
     function currencies($longlist = false)
     {
         return CurrencyLoader::currencies($longlist);
+    }
+}
+
+if (! function_exists('countryByFullName')) {
+    /**
+     * @param string $countryName
+     * @param string $langCode
+     * @return null|\Rinvex\Country\Country
+     * @throws \Rinvex\Country\CountryLoaderException
+     */
+    function countryByFullName(
+        string $countryName,
+        string $langCode = 'en'
+    ): null|\Rinvex\Country\Country {
+
+        $countries = CountryLoader::countries(true, true);
+
+        /** @var \Rinvex\Country\Country $country */
+        foreach ($countries as $country) {
+            if (strtolower($country->getTranslation($langCode)['common']) == strtolower($countryName)) {
+                return $country;
+            }
+        }
+
+        return null;
     }
 }
